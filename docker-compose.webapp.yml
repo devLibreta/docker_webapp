@@ -1,0 +1,71 @@
+version: "3.9"
+
+volumes:
+    ora21c-data:
+    pgre11-data:
+    
+services:
+    rhel7:
+        image: rhel7_image
+        container_name : rhel7jboss
+        ports:
+            - "18080:8080" # http
+            - "18443:8443" # https
+            - "19990:9990" # console
+            
+    oracle:
+        image: container-registry.oracle.com/database/express:21.3.0-xe
+        container_name: ora21c # set and use container_name instead of container_id
+        ports: # "host:container" port
+            - "11521:1521" # Oracle Listener
+            - "15500:5500" # Enterprise Manager Database Express. 
+        volumes:
+            - type : volume
+              source: ora21c-data
+              target: /opt/oracle/oradata
+            
+        environment:
+            # SYS, SYSTEM, PDB_ADMIN password
+            ORACLE_PWD: password
+            ORACLE_ALLOW_REMOTE: 'true'
+            ORACLE_SID: XE
+            ORACLE_CHARACTERSET: AL32UTF8
+            
+    postgre:
+        image: postgres:13-alpine
+        container_name: pgre11
+        ports:
+            - "15432:5432"
+        volumes:
+            - type : volume
+              source : pgre11-data
+              target : /var/lib/postgresql/data
+        deploy:
+            placement:
+                constraints:
+                    - node.role==manager
+                max_replicas_per_node: 1
+        environment:
+          TZ: Asia/Seoul
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: password
+        healthcheck:
+          test: ["CMD", "pg_isready", "-U", "postgres"]
+        restart: unless-stopped          
+          
+# ====================
+# << USAGE GUIDE >>
+# Docker build cmd : docker buildx build -t rhel7_image -f dockerfile.rhel7jboss .
+# Docker create and run : docker-compose -f docker-compose.webapp.yml up -d
+# Docker stop : docker-compose -f docker-compose.webapp.yml stop
+# Docker restart : docker-compose -f docker-compose.webapp.yml restart
+# Docker stop and delete : docker-compose -f docker-compose.webapp.yml down
+
+# << Oracle USAGE GUIDE >>
+# docker exec -it ora21c /bin/bash
+# sqlplus / as sysdba
+# ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+# create user devrun identified by "password";
+# grant dba to 원하는계정명 with admin option;
+# DROP USER C##DEVRUN CASCADE;
+# alter database set time_zone = 'Asia/Seoul';

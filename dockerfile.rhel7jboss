@@ -1,0 +1,48 @@
+# escape=\
+
+FROM registry.access.redhat.com/ubi8/ubi AS ubi8
+
+# 환경변수
+# JDK_PKG : 자바JDK 패키지 버전.
+# JBOSS_FILENAME : jboss 파일명
+# JBOSS_DIR : 컨테이너 내 jboss 설치 DIR
+ENV JDK_PKG="java-11-openjdk-devel.x86_64"
+ENV JBOSS_FILENAME="jboss-eap-7.4.0.zip"
+ENV JBOSS_DIR=/opt/jboss-eap-7.4
+
+# 라이브러리 파일 복사
+COPY ./lib/${JBOSS_FILENAME} /tmp
+
+# yum 초기화
+USER root
+RUN yum -y update
+
+# java 설치
+RUN yum -y install ${JDK_PKG}
+
+# jboss 설치
+	# unzip 설치
+	RUN yum install -y unzip
+	# jboss 압축 풀기
+	RUN unzip /tmp/${JBOSS_FILENAME} -d /opt/
+	# jboss 환경변수 설정
+	RUN export JBOSS_HOME=${JBOSS_DIR}
+	# jboss 유저 추가
+	RUN ${JBOSS_DIR}/bin/add-user.sh admin welcome1! --silent
+	# alias 추가
+	RUN echo "alias jboss='cd ${JBOSS_DIR}/standalone/deployments'" >> /root/.bashrc
+	RUN source /root/.bashrc
+
+# jboss 자동 실행
+WORKDIR ${JBOSS_DIR}/bin
+ENTRYPOINT ["./standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+
+# ====================
+# << USAGE GUIDE >>
+# Network ports : http 8080, https 8443, WebManagementConsole 9990
+# Docker build cmd : docker buildx build -t rhel7_image -f dockerfile.rhel7jboss .
+# Docker run cmd : docker run -dit --name rhel7jboss -p 18080:8080 -p 18443:8443 -p 19990:9990 rhel7_image
+# Docker start cmd : docker start rhel7jboss
+# Docker stop cmd : docker stop rhel7jboss
+# Docker log cmd : docker inspect rhel7jboss
+# Docker bash cmd : docker exec -it rhel7jboss /bin/bash
