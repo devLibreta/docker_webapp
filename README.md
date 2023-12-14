@@ -17,6 +17,18 @@
 	 - 15500 : 오라클 관리 콘솔 포트. 컨테이너 내부 5500 포트로 연결됨.
 	POSTGRE
 	 - 15432 : postgre 리스너 포트. 컨테이너 내부 5432 포트로 연결됨.
+
+## 계정 정보
+
+	JBOSS
+	 - ID : admin
+	 - PW : welcome1!
+	ORACLE
+	 - ID : SYS, SYSTEM, PDB_ADMIN
+	 - PW : welcome1!
+	POSTGRE
+	 - ID : admin
+	 - PW : welcome1!
 	
 ## 윈도우 WSL 환경설정
 
@@ -141,7 +153,9 @@ grant dba to [id] with admin option;
 alter database set time_zone = 'Asia/Seoul';
 ```
 
-> jboss 기본페이지 해지
+> jboss 기본페이지 해제
+
+기본페이지를 해제해야 war 파일이 배포된다.
 
 ```
 $ docker exec -it rhel7jboss /bin/bash

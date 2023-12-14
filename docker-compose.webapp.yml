@@ -26,7 +26,7 @@ services:
             
         environment:
             # SYS, SYSTEM, PDB_ADMIN password
-            ORACLE_PWD: password
+            ORACLE_PWD: welcome1!
             ORACLE_ALLOW_REMOTE: 'true'
             ORACLE_SID: XE
             ORACLE_CHARACTERSET: AL32UTF8
@@ -47,25 +47,8 @@ services:
                 max_replicas_per_node: 1
         environment:
           TZ: Asia/Seoul
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: password
+          POSTGRES_USER: 
+          POSTGRES_PASSWORD: welcome1!
         healthcheck:
           test: ["CMD", "pg_isready", "-U", "postgres"]
-        restart: unless-stopped          
-          
-# ====================
-# << USAGE GUIDE >>
-# Docker build cmd : docker buildx build -t rhel7_image -f dockerfile.rhel7jboss .
-# Docker create and run : docker-compose -f docker-compose.webapp.yml up -d
-# Docker stop : docker-compose -f docker-compose.webapp.yml stop
-# Docker restart : docker-compose -f docker-compose.webapp.yml restart
-# Docker stop and delete : docker-compose -f docker-compose.webapp.yml down
-
-# << Oracle USAGE GUIDE >>
-# docker exec -it ora21c /bin/bash
-# sqlplus / as sysdba
-# ALTER SESSION SET "_ORACLE_SCRIPT"=true;
-# create user devrun identified by "password";
-# grant dba to 원하는계정명 with admin option;
-# DROP USER C##DEVRUN CASCADE;
-# alter database set time_zone = 'Asia/Seoul';
+        restart: unless-stopped

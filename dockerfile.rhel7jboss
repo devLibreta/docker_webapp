@@ -36,13 +36,3 @@ RUN yum -y install ${JDK_PKG}
 # jboss 자동 실행
 WORKDIR ${JBOSS_DIR}/bin
 ENTRYPOINT ["./standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
-
-# ====================
-# << USAGE GUIDE >>
-# Network ports : http 8080, https 8443, WebManagementConsole 9990
-# Docker build cmd : docker buildx build -t rhel7_image -f dockerfile.rhel7jboss .
-# Docker run cmd : docker run -dit --name rhel7jboss -p 18080:8080 -p 18443:8443 -p 19990:9990 rhel7_image
-# Docker start cmd : docker start rhel7jboss
-# Docker stop cmd : docker stop rhel7jboss
-# Docker log cmd : docker inspect rhel7jboss
-# Docker bash cmd : docker exec -it rhel7jboss /bin/bash
