@@ -6,6 +6,13 @@
 	dockefile.rhel7jboss
 	docker-compose.webapp.yml
 
+## 로컬에서의 링크
+
+	JBOSS http : localhost:8080
+	JBOSS https : localhost:8443
+	JBOSS admin console : localhost:9990
+	ORACLE admin console : localhost:5500
+
 ## 최종 네트워크 오픈 포트
 
 	JBOSS
