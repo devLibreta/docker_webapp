@@ -47,7 +47,7 @@ services:
                 max_replicas_per_node: 1
         environment:
           TZ: Asia/Seoul
-          POSTGRES_USER: 
+          POSTGRES_USER: admin
           POSTGRES_PASSWORD: welcome1!
         healthcheck:
           test: ["CMD", "pg_isready", "-U", "postgres"]
