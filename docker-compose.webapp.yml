@@ -12,6 +12,10 @@ services:
             - "18080:8080" # http
             - "18443:8443" # https
             - "19990:9990" # console
+        volumes:
+            - type : volume
+              source: rhel7-data
+              target: /
             
     oracle:
         image: container-registry.oracle.com/database/express:21.3.0-xe
