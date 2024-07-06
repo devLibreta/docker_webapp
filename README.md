@@ -1,12 +1,14 @@
 # WebApp 설치 가이드
 
 ## 파일 구조
+___
 
 	lib/jboss-eap-7.4.0.zip
 	dockefile.rhel7jboss
 	docker-compose.webapp.yml
 
 ## 로컬에서의 링크
+___
 
 	JBOSS http : localhost:8080
 	JBOSS https : localhost:8443
@@ -14,6 +16,7 @@
 	ORACLE admin console : localhost:5500
 
 ## 최종 네트워크 오픈 포트
+___
 
 	JBOSS
 	 - 18080 : http 포트. 컨테이너 내부 8080 포트로 연결됨.
@@ -26,6 +29,7 @@
 	 - 15432 : postgre 리스너 포트. 컨테이너 내부 5432 포트로 연결됨.
 
 ## 계정 정보
+___
 
 	JBOSS
 	 - ID : admin
@@ -38,6 +42,7 @@
 	 - PW : welcome1!
 	
 ## 윈도우 WSL 환경설정
+___
 
 1. Windows 기능 켜기/끄기
 	- Hyper-V 관련 체크박스를 모두 선택하기.
@@ -54,6 +59,7 @@ $ wsl
 ```
 
 ## 도커(docker) 설치
+___
 
 1. docker window 파일 다운로드 및 설치.
 
@@ -65,7 +71,8 @@ $ wsl
 $ docker --version
 ```
 
-## rhel7jboss 환경설정
+## rhel7jboss 사전준비
+___
 
 redhat 리눅스에 jboss 를 설치한 컨테이너 환경설정 가이드.
 
@@ -101,7 +108,8 @@ $ docker buildx build -t rhel7_image -f dockerfile.rhel7jboss .
 		명령어에서 제일 마지막의 "."은 dockerfile이 위치한 경로.
 		뺴먹으면 실행이 안된다.
 
-## oracle DB 환경설정
+## oracle DB 사전준비
+___
 
 오라클 DB 컨테이너 설치 가이드.
 
@@ -118,11 +126,13 @@ $ Username: [ID]
 $ Password: [PASSWORD]
 ```
 
-## postgre DB 환경설정
+## postgre DB 사전준비
+___
 
 docker-compose 파일로 처리하기에 할일 없음.
 
 ## WebApp 컨테이너 실행
+___
 
 도커 컴포즈 파일(docker-compose.webapp.yml)을 사용하여 여러 컨테이너로 구성된 webapp 실행 가이드.
 
@@ -144,15 +154,16 @@ $ docker exec -it rhel7jboss /bin/bash
 		컨테이너명.
 		docker-compose 파일에서 image에 해당하는 값.
 
-> 오라클 DB 설정
+## 오라클 DB 환경설정
+___
 
-sqlplus 접속
+> sqlplus 접속
 ```
 $ docker exec -it ora21c /bin/bash
 $ sqlplus / as sysdba
 ```
 
-sqlplus 접속 후 SQL
+> sqlplus 접속 후 SQL
 ```sql
 ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 create user [id] identified by [root_pw];
@@ -160,9 +171,11 @@ grant dba to [id] with admin option;
 alter database set time_zone = 'Asia/Seoul';
 ```
 
-> jboss 기본페이지 해제
+## jboss 환경설정
 
-기본페이지를 해제해야 war 파일이 배포된다.
+> 기본페이지 해제
+
+* 기본페이지를 해제해야 war 파일이 배포된다.
 
 ```
 $ docker exec -it rhel7jboss /bin/bash
@@ -170,16 +183,17 @@ $ cd /opt/jboss-eap-7.4/standalone/configuration
 $ vi standalone.xml
 ```
 
-vi 에디터에서 해당 라인 검색
+* vi 에디터에서 해당 라인 검색
 ```xml
 <location name="/" handler="welcome-content"/>
 ```
-다음과 같이 주석처리.
+* 다음과 같이 주석처리.
 ```xml
 <!--<location name="/" handler="welcome-content"/>-->
 ```
 
 ### 기타 컨테이너 명령어
+___
 
 > 중단(stop) 명령어
 ```
