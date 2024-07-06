@@ -158,20 +158,27 @@ $ docker exec -it rhel7jboss /bin/bash
 ___
 
 > sqlplus 접속
+
 ```
 $ docker exec -it ora21c /bin/bash
 $ sqlplus / as sysdba
 ```
 
-> sqlplus 접속 후 SQL
+> 사용자 계정 생성 
+
 ```sql
-ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 create user [id] identified by [root_pw];
 grant dba to [id] with admin option;
+```
+
+> 기타 설정(선택사항)
+
+```sql
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 alter database set time_zone = 'Asia/Seoul';
 ```
 
-## jboss 환경설정
+## rhel7jboss 환경설정
 
 > 기본페이지 해제
 
